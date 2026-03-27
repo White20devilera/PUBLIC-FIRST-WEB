@@ -3,19 +3,19 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ND Doom | Modern Digital Ops</title>
+    <title>ND Doom | Professional Digital Architecture</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
     
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap');
         
         body {
-            font-family: 'Space Grotesk', sans-serif;
-            background-color: #0f172a; 
-            color: #f1f5f9;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            background: #f1f5f9;
+            color: #1e293b;
             overflow-x: hidden;
         }
 
@@ -27,250 +27,188 @@
             height: 100vh;
             z-index: 0;
             pointer-events: none;
-            opacity: 0.3;
+            opacity: 0.6;
         }
 
-        .glass-card {
-            background: rgba(255, 255, 255, 0.07);
-            backdrop-filter: blur(12px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        /* Smooth Transition for Navbar */
+        #navbar {
             transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        .glass-card:hover {
-            background: rgba(255, 255, 255, 0.12);
-            border-color: #ef4444; 
-            transform: translateY(-8px);
+        /* Navbar Scrolled State - පල්ලෙහාට scroll කරද්දී එන look එක */
+        .nav-scrolled {
+            background: rgba(30, 41, 59, 0.95) !important; /* Deep Slate Dark */
+            backdrop-filter: blur(10px);
+            padding-top: 1rem !important;
+            padding-bottom: 1rem !important;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
         }
 
-        .input-field {
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            color: #ffffff;
+        .nav-scrolled .nav-link { color: #cbd5e1 !important; }
+        .nav-scrolled .nav-link:hover { color: #ffffff !important; }
+        .nav-scrolled .logo-text { color: #ffffff !important; }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.8);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 1);
+            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.03);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 1);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(30, 41, 59, 0.08);
+            border-color: #6366f1;
+        }
+
+        .nav-link {
+            font-size: 14px;
+            font-weight: 600;
+            color: #64748b;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #1e293b;
+            color: #fff;
+            padding: 12px 28px;
+            border-radius: 8px;
+            font-weight: 700;
             transition: all 0.3s ease;
         }
-
-        .input-field:focus {
-            border-color: #ef4444;
-            background: rgba(255, 255, 255, 0.1);
-            outline: none;
+        .btn-primary:hover {
+            background: #4f46e5;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(79, 70, 229, 0.2);
         }
 
-        .text-accent { color: #ef4444; }
-
-        .gradient-heading {
-            background: linear-gradient(to right, #ffffff, #94a3b8);
+        .text-gradient {
+            background: linear-gradient(135deg, #1e293b 0%, #4f46e5 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Portfolio Image Placeholder Style */
-        .project-img-box {
-            background: linear-gradient(45deg, #1e293b, #0f172a);
-            position: relative;
-            overflow: hidden;
-        }
-        .project-img-box::after {
-            content: "PREVIEW";
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 10px;
-            letter-spacing: 5px;
-            color: rgba(255,255,255,0.1);
-            font-weight: bold;
-        }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
     </style>
 </head>
 <body class="antialiased">
 
     <div id="canvas-container"></div>
 
-    <nav class="fixed w-full z-50 px-8 py-6 flex justify-between items-center transition-all duration-300" id="navbar">
-        <div class="text-3xl font-bold tracking-tighter text-white">ND <span class="text-accent">DOOM</span></div>
-        <div class="hidden md:flex space-x-12 text-[14px] uppercase tracking-[0.2em] text-gray-300 font-semibold">
-            <a href="#home" class="hover:text-accent transition-colors">Home</a>
-            <a href="#services" class="hover:text-accent transition-colors">Services</a>
-            <a href="#portfolio" class="hover:text-accent transition-colors">Projects</a>
-            <a href="#contact" class="hover:text-accent transition-colors">Contact</a>
+    <nav class="fixed w-full z-50 px-12 py-8 flex justify-between items-center" id="navbar">
+        <div class="logo-text text-2xl font-extrabold tracking-tight text-slate-900 transition-colors duration-300">
+            ND<span class="text-indigo-600">.DOOM</span>
         </div>
-        <a href="#contact" class="bg-white text-black px-8 py-3 text-[12px] uppercase font-bold tracking-widest hover:bg-accent hover:text-white transition-all rounded-full shadow-lg">Start Project</a>
+        <div class="hidden md:flex space-x-10 items-center">
+            <a href="#home" class="nav-link">Overview</a>
+            <a href="#services" class="nav-link">Services</a>
+            <a href="#portfolio" class="nav-link">Projects</a>
+            <a href="#contact" class="nav-link">Contact</a>
+            <button class="btn-primary" id="nav-btn">Consult Now</button>
+        </div>
     </nav>
 
-    <section id="home" class="relative min-h-screen flex items-center justify-center pt-20">
-        <div class="relative z-10 text-center px-4 hero-content">
-            <span class="text-accent font-mono tracking-[0.6em] text-[12px] uppercase mb-6 block">ND DOOM OPERATIONAL UNIT</span>
-            <h1 class="text-6xl md:text-9xl font-bold mb-8 tracking-tighter leading-none gradient-heading">
-                MODERN <br> VISIONS.
+    <section id="home" class="relative min-h-screen flex items-center justify-center pt-24">
+        <div class="relative z-10 text-center px-4">
+            <div class="mb-6 inline-flex items-center px-3 py-1 rounded-full bg-indigo-50 border border-indigo-100 reveal-up">
+                <span class="w-2 h-2 rounded-full bg-indigo-600 animate-pulse mr-2"></span>
+                <span class="text-indigo-700 font-bold text-[10px] uppercase tracking-wider">Operational Core 2026</span>
+            </div>
+            <h1 class="text-6xl md:text-8xl font-extrabold mb-8 tracking-tight text-slate-900 reveal-up">
+                Precise <span class="text-gradient">Digital</span> <br> Engineering.
             </h1>
-            <p class="text-gray-400 max-w-2xl mx-auto mb-12 text-xl leading-relaxed">මෘදුකාංග නිර්මාණය සහ සයිබර් ආරක්ෂණ ක්ෂේත්‍රයේ නවතම විසඳුම්. අපි ඔබේ ව්‍යාපාරික හීනය තාක්ෂණයෙන් සැබෑ කරමු.</p>
-            <div class="flex flex-wrap gap-5 justify-center">
-                <a href="#portfolio" class="bg-accent text-white px-12 py-5 font-bold uppercase tracking-widest text-[11px] hover:bg-white hover:text-black transition-all rounded-sm shadow-xl shadow-red-900/20">Explore Projects</a>
+            <p class="text-slate-500 max-w-2xl mx-auto mb-12 text-lg font-medium leading-relaxed reveal-up">
+                Web Designer & Developer. තාක්ෂණය සහ ජීව විද්‍යාත්මක රටාවන්ගේ එකතුවෙන් නිර්මාණය වන අතිනවීන වෙබ් අත්දැකීම.
+            </p>
+            <div class="flex justify-center gap-4 reveal-up">
+                <a href="#portfolio" class="btn-primary">View Case Studies</a>
             </div>
         </div>
     </section>
 
     <section id="services" class="py-32 relative z-10 container mx-auto px-6 max-w-7xl">
-        <div class="flex flex-col md:flex-row justify-between items-end mb-20 gap-8">
-            <div class="reveal-up">
-                <h2 class="text-accent font-mono tracking-widest text-sm uppercase mb-3">Our Core Skills</h2>
-                <h3 class="text-5xl font-bold tracking-tight text-white">SERVICES WE PROVIDE.</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <div class="glass-card p-10 rounded-2xl reveal-up">
+                <h4 class="text-xl font-bold mb-3">Web Architecture</h4>
+                <p class="text-slate-500 text-sm">Scalable, responsive interfaces built with precision.</p>
             </div>
-        </div>
-        
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-10">
-            <div class="glass-card p-12 rounded-3xl reveal-up">
-                <div class="text-accent mb-8">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" stroke-width="2"></path></svg>
-                </div>
-                <h4 class="text-2xl font-bold mb-4 text-white uppercase tracking-tight">Web Engineering</h4>
-                <p class="text-gray-400 text-base leading-relaxed mb-6">High-performance responsive websites built for modern business goals.</p>
-                <div class="h-1 w-16 bg-accent/40"></div>
+            <div class="glass-card p-10 rounded-2xl reveal-up">
+                <h4 class="text-xl font-bold mb-3">Cyber Defense</h4>
+                <p class="text-slate-500 text-sm">Security auditing and threat monitoring systems.</p>
             </div>
-
-            <div class="glass-card p-12 rounded-3xl reveal-up">
-                <div class="text-accent mb-8">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" stroke-width="2"></path></svg>
-                </div>
-                <h4 class="text-2xl font-bold mb-4 text-white uppercase tracking-tight">Cyber Security</h4>
-                <p class="text-gray-400 text-base leading-relaxed mb-6">Security auditing and vulnerability management for your digital assets.</p>
-                <div class="h-1 w-16 bg-accent/40"></div>
-            </div>
-
-            <div class="glass-card p-12 rounded-3xl reveal-up">
-                <div class="text-accent mb-8">
-                    <svg class="w-10 h-10" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path d="M13 10V3L4 14h7v7l9-11h-7z" stroke-width="2"></path></svg>
-                </div>
-                <h4 class="text-2xl font-bold mb-4 text-white uppercase tracking-tight">AI Asset Design</h4>
-                <p class="text-gray-400 text-base leading-relaxed mb-6">Cinematic branding assets generated with advanced AI models.</p>
-                <div class="h-1 w-16 bg-accent/40"></div>
+            <div class="glass-card p-10 rounded-2xl reveal-up">
+                <h4 class="text-xl font-bold mb-3">AI Integration</h4>
+                <p class="text-slate-500 text-sm">Intelligent automation and neural visuals.</p>
             </div>
         </div>
     </section>
 
-    <section id="portfolio" class="py-32 relative z-10 container mx-auto px-6 max-w-7xl">
-        <div class="text-center mb-20 reveal-up">
-            <h2 class="text-accent font-mono tracking-widest text-xs uppercase mb-4">Case Studies</h2>
-            <h3 class="text-5xl font-bold text-white tracking-tight">FEATURED DEPLOYMENTS</h3>
-        </div>
-
-        <div class="grid grid-cols-1 lg:grid-cols-2 gap-12">
-            <div class="glass-card rounded-[2.5rem] overflow-hidden reveal-up group">
-                <div class="h-72 project-img-box flex items-center justify-center transition-all duration-500 group-hover:scale-105">
-                    <span class="text-accent/20 text-6xl font-black italic">ND SALON</span>
-                </div>
-                <div class="p-10">
-                    <div class="flex justify-between items-start mb-4">
-                        <h4 class="text-2xl font-bold text-white">Luxury Salon Web Hub</h4>
-                        <span class="text-accent text-[10px] font-bold border border-accent/30 px-3 py-1 rounded-full uppercase">Live</span>
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">A high-end single-page application for ND Salon Kurunegala, featuring modern UI/UX and dark mode aesthetics.</p>
-                    <div class="flex gap-3">
-                        <span class="text-[10px] bg-white/5 px-4 py-2 rounded-full font-bold text-gray-300">Tailwind CSS</span>
-                        <span class="text-[10px] bg-white/5 px-4 py-2 rounded-full font-bold text-gray-300">JavaScript</span>
-                    </div>
-                </div>
+    <section id="portfolio" class="py-20 relative z-10 container mx-auto px-6 max-w-7xl h-[800px]">
+        <h3 class="text-4xl font-extrabold text-slate-900 mb-10 reveal-up">Featured Work</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+            <div class="glass-card h-80 rounded-2xl flex items-center justify-center reveal-up">
+                <span class="text-slate-300 font-bold">ND SALON - KURUNEGALA</span>
             </div>
-
-            <div class="glass-card rounded-[2.5rem] overflow-hidden reveal-up group">
-                <div class="h-72 project-img-box flex items-center justify-center transition-all duration-500 group-hover:scale-105">
-                    <span class="text-accent/20 text-6xl font-black italic">CYBER X</span>
-                </div>
-                <div class="p-10">
-                    <div class="flex justify-between items-start mb-4">
-                        <h4 class="text-2xl font-bold text-white">Cyber Command Dashboard</h4>
-                        <span class="text-gray-500 text-[10px] font-bold border border-gray-700 px-3 py-1 rounded-full uppercase">Internal</span>
-                    </div>
-                    <p class="text-gray-400 text-sm leading-relaxed mb-6">A real-time network monitoring and threat detection system built for enterprise-level cyber defense operations.</p>
-                    <div class="flex gap-3">
-                        <span class="text-[10px] bg-white/5 px-4 py-2 rounded-full font-bold text-gray-300">Next.js</span>
-                        <span class="text-[10px] bg-white/5 px-4 py-2 rounded-full font-bold text-gray-300">Security API</span>
-                    </div>
-                </div>
+            <div class="glass-card h-80 rounded-2xl flex items-center justify-center reveal-up">
+                <span class="text-slate-300 font-bold">AIR FORCE PROJECT</span>
             </div>
         </div>
     </section>
-
-    <section id="contact" class="py-32 relative z-10 container mx-auto px-6 max-w-5xl">
-        <div class="glass-card p-12 md:p-16 rounded-[3rem] reveal-up">
-            <div class="text-center mb-16">
-                <h3 class="text-4xl font-bold text-white tracking-tighter">SECURE TRANSMISSION</h3>
-                <p class="text-gray-500 mt-4 text-sm tracking-widest uppercase">අපව සම්බන්ධ කර ගැනීමට පහත පෝරමය පුරවන්න</p>
-            </div>
-            
-            <form class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Identity</label>
-                    <input type="text" placeholder="Your Name" class="w-full input-field p-5 rounded-sm text-xs font-bold tracking-widest uppercase">
-                </div>
-                <div class="space-y-2">
-                    <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Comms Link</label>
-                    <input type="email" placeholder="Your Email" class="w-full input-field p-5 rounded-sm text-xs font-bold tracking-widest uppercase">
-                </div>
-                <div class="md:col-span-2 space-y-2">
-                    <label class="text-[10px] font-bold text-gray-500 uppercase tracking-widest ml-1">Objective</label>
-                    <textarea rows="5" placeholder="Project details..." class="w-full input-field p-5 rounded-sm text-xs font-bold tracking-widest uppercase"></textarea>
-                </div>
-                <div class="md:col-span-2 pt-6">
-                    <button type="button" class="w-full bg-white text-black py-6 font-bold uppercase tracking-[0.4em] text-[11px] hover:bg-accent hover:text-white transition-all duration-500 shadow-2xl">
-                        Send Message
-                    </button>
-                </div>
-            </form>
-        </div>
-    </section>
-
-    <footer class="py-12 text-center text-gray-600 text-[10px] tracking-[0.5em] uppercase z-10 relative">
-        <p>© 2026 ND DOOM OPERATIONAL CORE. SECURED ENVIRONMENT.</p>
-    </footer>
 
     <script>
-        // --- 1. Three.js Background ---
+        // --- 1. Scroll Logic for Navbar ---
+        const navbar = document.getElementById('navbar');
+        const navBtn = document.getElementById('nav-btn');
+
+        window.addEventListener('scroll', () => {
+            if (window.scrollY > 50) {
+                navbar.classList.add('nav-scrolled');
+                navBtn.style.backgroundColor = '#4f46e5'; // Button එක Indigo වෙනවා Dark background එකේදී
+            } else {
+                navbar.classList.remove('nav-scrolled');
+                navBtn.style.backgroundColor = '#1e293b'; // ආපහු Slate වෙනවා
+            }
+        });
+
+        // --- 2. Three.js - 3D Neural Network ---
         const scene = new THREE.Scene();
-        const camera = new THREE.PerspectiveCamera(75, window.innerWidth/window.innerHeight, 0.1, 1000);
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
         const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
         renderer.setSize(window.innerWidth, window.innerHeight);
         document.getElementById('canvas-container').appendChild(renderer.domElement);
 
-        const geo = new THREE.BufferGeometry();
-        const count = 3000;
-        const pos = new Float32Array(count * 3);
-        for(let i=0; i<count*3; i++) { pos[i] = (Math.random() - 0.5) * 12; }
-        geo.setAttribute('position', new THREE.BufferAttribute(pos, 3));
-        const mat = new THREE.PointsMaterial({ size: 0.005, color: 0xef4444, transparent: true, opacity: 0.5 });
-        const points = new THREE.Points(geo, mat);
-        scene.add(points);
-        camera.position.z = 3;
+        const group = new THREE.Group();
+        scene.add(group);
+
+        const nodes = [];
+        for (let i = 0; i < 60; i++) {
+            const color = Math.random() > 0.9 ? 0x4f46e5 : 0x94a3b8;
+            const mesh = new THREE.Mesh(new THREE.SphereGeometry(0.04, 8, 8), new THREE.MeshBasicMaterial({ color: color }));
+            mesh.position.set((Math.random()-0.5)*12, (Math.random()-0.5)*12, (Math.random()-0.5)*12);
+            nodes.push({ mesh, velocity: new THREE.Vector3((Math.random()-0.5)*0.005, (Math.random()-0.5)*0.005, (Math.random()-0.5)*0.005) });
+            group.add(mesh);
+        }
 
         function animate() {
             requestAnimationFrame(animate);
-            points.rotation.y += 0.0005;
+            nodes.forEach(n => {
+                n.mesh.position.add(n.velocity);
+                if(Math.abs(n.mesh.position.x)>6) n.velocity.x*=-1;
+                if(Math.abs(n.mesh.position.y)>6) n.velocity.y*=-1;
+            });
+            group.rotation.y += 0.001;
             renderer.render(scene, camera);
         }
+        camera.position.z = 6;
         animate();
 
-        // --- 2. Animations ---
+        // GSAP Reveal
         gsap.registerPlugin(ScrollTrigger);
-        gsap.from(".hero-content > *", { opacity: 0, y: 40, duration: 1, stagger: 0.2 });
         gsap.utils.toArray('.reveal-up').forEach(el => {
-            gsap.from(el, { scrollTrigger: { trigger: el, start: "top 95%" }, opacity: 0, y: 30, duration: 0.8 });
-        });
-
-        // Navbar Interaction
-        window.addEventListener('scroll', () => {
-            const nav = document.getElementById('navbar');
-            if(window.scrollY > 50) { 
-                nav.style.backgroundColor = 'rgba(15, 23, 42, 0.95)'; 
-                nav.style.padding = '15px 32px';
-                nav.style.borderBottom = '1px solid rgba(255,255,255,0.05)';
-            }
-            else { 
-                nav.style.backgroundColor = 'transparent'; 
-                nav.style.padding = '24px 32px';
-                nav.style.borderBottom = 'none';
-            }
+            gsap.from(el, { scrollTrigger: { trigger: el, start: "top 95%" }, opacity: 0, y: 30, duration: 1 });
         });
     </script>
 </body>
